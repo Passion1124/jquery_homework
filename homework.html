@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jquery实现数据改变页面也改变</title>
+    <link rel="stylesheet" href="homework.css">
+</head>
+<body>
+<header>
+    <button>预览</button>
+</header>
+<section>
+</section>
+<div id="dialog">
+    <input type="radio" name="type" value="文本"> 文本 <br>
+    <input type="radio" name="type" value="日期"> 日期 <br>
+    <button>确定</button>
+    <span>×</span>
+</div>
+<footer>
+    <button>+</button>
+</footer>
+<script src="jquery-1.9.0.min.js"></script>
+<script>
+//    $("section").empty();
+    var data = {text:[],showDelete:true,headerButton:"预览",footerButton:"+"};
+    $("footer button").on("click",function () {
+        if($(this).text() == "+"){
+            $("#dialog").show();
+        }
+    });
+    $("#dialog span").on("click",function () {
+        $("#dialog").hide();
+    });
+    $("#dialog button").on("click",function () {
+        $("#dialog").hide();
+        var type = $('input[name="type"]:checked').val();
+        updateData("add",type);
+    });
+    function updateData(judgment,type) {
+        if (judgment == "add"){
+            data.text.push(type);
+        }else if (judgment == "delete"){
+            data.text.splice(type,1);
+        }
+        generatingNodes();
+    }
+    function generatingNodes() {
+        $("section").empty();
+        $("header").empty();
+        $("footer").empty();
+        var mystring = "<ul>";
+        for (var i = 0; i < data.text.length; i++){
+            if (data.showDelete == true){
+                mystring += "<li>"+data.text[i]+"<span></span><button>-</button></li>"
+            }else {
+                mystring += "<li>"+data.text[i]+"<span></span></li>"
+            }
+        }
+        mystring += "</ul>";
+        $("header").append("<button>"+data.headerButton+"</button>");
+        $("footer").append("<button>"+data.footerButton+"</button>");
+        $("section").append(mystring);
+    }
+    $("section").delegate("ul li button","click",function () {
+        var type = $($(this).parent()).index();
+        updateData("delete",type);
+    });
+    $("header").delegate("button","click",function () {
+        if (data.headerButton == "预览"){
+            data.headerButton = "编辑";
+            data.showDelete = false;
+            data.footerButton = "保存";
+        }else {
+            data.headerButton = "预览";
+            data.showDelete = true;
+            data.footerButton = "+";
+        }
+        updateData();
+    })
+</script>
+</body>
+</html>
