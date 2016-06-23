@@ -24,7 +24,7 @@
 <script>
 //    $("section").empty();
     var data = {text:[],showDelete:true,headerButton:"预览",footerButton:"+"};
-    $("footer button").on("click",function () {
+    $("footer").delegate("button","click",function () {
         if($(this).text() == "+"){
             $("#dialog").show();
         }
